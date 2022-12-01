@@ -91,6 +91,7 @@
 #include "flight/position.h"
 #include "flight/rpm_filter.h"
 #include "flight/servos.h"
+#include "flight/volume_limitation.h"
 
 #include "io/asyncfatfs/asyncfatfs.h"
 #include "io/beeper.h"
@@ -1720,6 +1721,32 @@ static bool mspProcessOutCommand(int16_t cmdMSP, sbuf_t *dst)
         serializeSDCardSummaryReply(dst);
         break;
 
+    case MSP_VOLUME_LIMITATION:
+        sbufWriteU8(dst, volLimitationConfig()->altitudeLimitation);
+        sbufWriteU8(dst, volLimitationConfig()->distanceLimitation);
+        sbufWriteU8(dst, volLimitationConfig()->landingAllowed);
+        sbufWriteU16(dst, volLimitationConfig()->maxAltitude);
+        sbufWriteU8(dst, volLimitationConfig()->alertAltitudeBeforeMax);
+        sbufWriteU16(dst, volLimitationConfig()->maxDistance);
+        sbufWriteU8(dst, volLimitationConfig()->alertDistanceBeforeMax);
+        sbufWriteU16(dst, volLimitationConfig()->throttleP);
+        sbufWriteU16(dst, volLimitationConfig()->throttleI);
+        sbufWriteU16(dst, volLimitationConfig()->throttleD);
+        sbufWriteU16(dst, volLimitationConfig()->throttleMin);
+        sbufWriteU16(dst, volLimitationConfig()->throttleMax);
+        sbufWriteU16(dst, volLimitationConfig()->throttleHover);
+        sbufWriteU8(dst, volLimitationConfig()->safeHold_pitch_P);
+        sbufWriteU8(dst, volLimitationConfig()->safeHold_pitch_I);
+        sbufWriteU8(dst, volLimitationConfig()->safeHold_pitch_D);
+        sbufWriteU8(dst, volLimitationConfig()->safeHold_roll_P);
+        sbufWriteU8(dst, volLimitationConfig()->safeHold_roll_I);
+        sbufWriteU8(dst, volLimitationConfig()->safeHold_roll_D);
+        sbufWriteU8(dst, volLimitationConfig()->safeHoldAngleMax);
+        sbufWriteU8(dst, volLimitationConfig()->minSafeAltitude);
+        sbufWriteU8(dst, volLimitationConfig()->minSats);
+        sbufWriteU8(dst, volLimitationConfig()->armingWithoutGps);
+        break;
+
     case MSP_MOTOR_3D_CONFIG:
         sbufWriteU16(dst, flight3DConfig()->deadband3d_low);
         sbufWriteU16(dst, flight3DConfig()->deadband3d_high);
@@ -2724,6 +2751,32 @@ static mspResult_e mspProcessInCommand(mspDescriptor_t srcDesc, int16_t cmdMSP, 
         break;
 #endif
 #endif
+
+case MSP_SET_VOLUME_LIMITATION:
+        volLimitationConfigMutable()->altitudeLimitation = sbufReadU8(src);
+        volLimitationConfigMutable()->distanceLimitation = sbufReadU8(src);
+        volLimitationConfigMutable()->landingAllowed = sbufReadU8(src);
+        volLimitationConfigMutable()->maxAltitude = sbufReadU16(src);
+        volLimitationConfigMutable()->alertAltitudeBeforeMax = sbufReadU8(src);
+        volLimitationConfigMutable()->maxDistance = sbufReadU16(src);
+        volLimitationConfigMutable()->alertDistanceBeforeMax = sbufReadU8(src);
+        volLimitationConfigMutable()->throttleP = sbufReadU16(src);
+        volLimitationConfigMutable()->throttleI = sbufReadU16(src);
+        volLimitationConfigMutable()->throttleD = sbufReadU16(src);
+        volLimitationConfigMutable()->throttleMin = sbufReadU16(src);
+        volLimitationConfigMutable()->throttleMax = sbufReadU16(src);
+        volLimitationConfigMutable()->throttleHover = sbufReadU16(src);
+        volLimitationConfigMutable()->safeHold_pitch_P = sbufReadU8(src);
+        volLimitationConfigMutable()->safeHold_pitch_I = sbufReadU8(src);
+        volLimitationConfigMutable()->safeHold_pitch_D = sbufReadU8(src);
+        volLimitationConfigMutable()->safeHold_roll_P = sbufReadU8(src);
+        volLimitationConfigMutable()->safeHold_roll_I = sbufReadU8(src);
+        volLimitationConfigMutable()->safeHold_roll_D = sbufReadU8(src);
+        volLimitationConfigMutable()->safeHoldAngleMax = sbufReadU8(src);
+        volLimitationConfigMutable()->minSafeAltitude = sbufReadU8(src);
+        volLimitationConfigMutable()->minSats = sbufReadU8(src);
+        volLimitationConfigMutable()->armingWithoutGps = sbufReadU8(src);
+    break;
 
     case MSP_SET_MOTOR:
         for (int i = 0; i < getMotorCount(); i++) {

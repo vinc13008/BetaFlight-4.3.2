@@ -63,6 +63,7 @@
 #include "flight/position.h"
 #include "flight/rpm_filter.h"
 #include "flight/servos.h"
+#include "flight/volume_limitation.h"
 
 #include "io/beeper.h"
 #include "io/dashboard.h"
@@ -1048,6 +1049,30 @@ const clivalue_t valueTable[] = {
     { "gps_rescue_use_mag",         VAR_UINT8  | MASTER_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_OFF_ON }, PG_GPS_RESCUE, offsetof(gpsRescueConfig_t, useMag) },
 #endif
 #endif
+// PG_VOLUME_LIMITATION
+    { "geo_altitude",           VAR_UINT8  | MASTER_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_OFF_ON }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, altitudeLimitation) },
+    { "geo_distance",           VAR_UINT8  | MASTER_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_OFF_ON }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, distanceLimitation) },
+    { "geo_landing",            VAR_UINT8  | MASTER_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_OFF_ON }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, landingAllowed) },
+    { "geo_max_altitude",       VAR_UINT16 | MASTER_VALUE, .config.minmaxUnsigned = { 5, 500 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, maxAltitude) },
+    { "geo_alert_alti_bef_max", VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 0, 50 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, alertAltitudeBeforeMax) },
+    { "geo_max_dist",           VAR_UINT16 | MASTER_VALUE, .config.minmaxUnsigned = { 20, 5000 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, maxDistance) },
+    { "geo_alert_dist_bef_max", VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 0, 50 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, alertDistanceBeforeMax) },
+    { "tech_throttle_p",         VAR_UINT16 | MASTER_VALUE, .config.minmaxUnsigned = { 0, 500 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, throttleP) },
+    { "tech_throttle_i",         VAR_UINT16 | MASTER_VALUE, .config.minmaxUnsigned = { 0, 500 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, throttleI) },
+    { "tech_throttle_d",         VAR_UINT16 | MASTER_VALUE, .config.minmaxUnsigned = { 0, 500 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, throttleD) },
+    { "tech_throttle_min",       VAR_UINT16 | MASTER_VALUE, .config.minmaxUnsigned = { 1000, 2000 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, throttleMin) },
+    { "tech_throttle_max",       VAR_UINT16 | MASTER_VALUE, .config.minmaxUnsigned = { 1000, 2000 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, throttleMax) },
+    { "tech_throttle_hover",     VAR_UINT16 | MASTER_VALUE, .config.minmaxUnsigned = { 1000, 2000 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, throttleHover) },
+    { "tech_safehold_pitch_p",   VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 0, 200 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, safeHold_pitch_P) },
+    { "tech_safehold_pitch_i",   VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 0, 200 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, safeHold_pitch_I) },
+    { "tech_safehold_pitch_d",   VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 0, 200 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, safeHold_pitch_D) },
+    { "tech_safehold_roll_p",    VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 0, 200 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, safeHold_roll_P) },
+    { "tech_safehold_roll_i",    VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 0, 200 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, safeHold_roll_I) },
+    { "tech_safehold_roll_d",    VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 0, 200 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, safeHold_roll_D) },
+    { "tech_safehold_angle_max", VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 0, 50 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, safeHoldAngleMax) },
+    { "tech_min_safe_altitude",  VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 10, 100 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, minSafeAltitude) },
+    { "geo_min_sats",           VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 0, 50 }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, minSats) },
+    { "geo_arming_without_gps", VAR_UINT8  | MASTER_VALUE | MODE_LOOKUP, .config.lookup = { TABLE_OFF_ON }, PG_VOLUME_LIMITATION, offsetof(volLimitationConfig_t, armingWithoutGps) },
 #endif
 
     { PARAM_NAME_DEADBAND,          VAR_UINT8  | MASTER_VALUE, .config.minmaxUnsigned = { 0, 32 }, PG_RC_CONTROLS_CONFIG, offsetof(rcControlsConfig_t, deadband) },

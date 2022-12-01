@@ -143,6 +143,7 @@
 #include "flight/imu.h"
 #include "flight/mixer.h"
 #include "flight/pid.h"
+#include "flight/volume_limitation.h"
 
 #include "io/gps.h"
 #include "io/vtx.h"
@@ -986,6 +987,10 @@ static void osdElementFlymode(osdElementParms_t *element)
         strcpy(element->buff, "!FS!");
     } else if (FLIGHT_MODE(GPS_RESCUE_MODE)) {
         strcpy(element->buff, "RESC");
+    } else if (FLIGHT_MODE(SAFE_HOLD_MODE)) {
+        strcpy(element->buff, "DIST");
+    } else if (FLIGHT_MODE(ALTHOLD_MODE)) {
+        strcpy(element->buff, "ALTI");
     } else if (FLIGHT_MODE(HEADFREE_MODE)) {
         strcpy(element->buff, "HEAD");
     } else if (FLIGHT_MODE(ANGLE_MODE)) {

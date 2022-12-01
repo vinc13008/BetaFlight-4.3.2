@@ -83,7 +83,9 @@ typedef enum {
     MAG_MODE        = (1 << 2),
 //    BARO_MODE       = (1 << 3),
 //    GPS_HOME_MODE   = (1 << 4),
+    ALTHOLD_MODE = (1 << 3),
 //    GPS_HOLD_MODE   = (1 << 5),
+    SAFE_HOLD_MODE = (1 << 5),
     HEADFREE_MODE   = (1 << 6),
 //    UNUSED_MODE     = (1 << 7), // old autotune
     PASSTHRU_MODE   = (1 << 8),
